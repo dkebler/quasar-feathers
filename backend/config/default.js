@@ -1,8 +1,13 @@
 // change this path if moving backend relative to client frontend
-var clientConfig = require('../../frontend/config')
 
-module.exports = {
-  client: clientConfig,
+
+// var clientConfig = require('../../frontend/config')
+
+var config = {
+
+  clientPath: '../../frontend',
+  
+  // client: require('../../frontend' + '/config'),
 
   // Proxy your API if using any.
   // Also see /build/script.dev.js and search for "proxy api requests"
@@ -30,8 +35,12 @@ module.exports = {
   nedb: '../data'
 }
 
+config.client = require(config.clientPath + '/config')
+
+module.exports = config
+
 /*
- * proxyTable example:
+ * proxyTable example:s
  *
    proxyTable: {
       // proxy all requests starting with /api
