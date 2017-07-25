@@ -2,34 +2,25 @@
   <q-layout>
     <div slot="header" class="toolbar">
 
-      <button @click="$refs.menu.open()" v-show="authenticated">
+      <button @click="$refs.menu.open()" v-show="admin_mode">
         <i>menu</i>
         <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 20]">Menu</q-tooltip>
       </button>
 
       <q-toolbar-title :padding="0">
-        Quasar + Feathers boilerplate
+        Home Lighting
       </q-toolbar-title>
 
-      <!--button>
-        <i>featured_play_list</i>
-        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 0]">Tasks</q-tooltip>
-      </button-->
+      <button class="primary circular" @click="goTo('admin')" v-show="admin&&!admin_mode">
+        <i>settings</i>
+        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 20]">Enter Admin Mode</q-tooltip>
+      </button>
 
-      <button class="primary" @click="goTo('signin')" v-show="!authenticated">
-        Sign In
+       <button class="primary circular" @click="admin_mode_off()" v-show="admin_mode">
+        <i>stop</i>
+        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 20]">Exit Admin Mode</q-tooltip>
       </button>
-      <button class="primary" @click="goTo('register')" v-show="!authenticated">
-        Register
-      </button>
-      <button class="primary circular" @click="goTo('home')" v-show="authenticated">
-        <i>home</i>
-        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 20]">Home</q-tooltip>
-      </button>
-      <button class="primary circular" @click="goTo('chat')" v-show="authenticated">
-        <i>chat</i>
-        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 20]">Chat</q-tooltip>
-      </button>
+  
       
       <!--q-tabs slot="navigation">
         <q-tab route="/singin" exact replace>Sign In</q-tab>
@@ -37,18 +28,10 @@
         <q-tab icon="featured_play_list" route="/chat" exact replace>Your Tasks</q-tab>
       </q-tabs-->
 
-      <q-fab icon="perm_identity" direction="left" v-show="authenticated">
-        <q-small-fab class="primary" @click.native="signout" icon="exit_to_app">
-          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 20]">Sign Out</q-tooltip>
-        </q-small-fab>
-      </q-fab>
-
-      <!--button @click="$refs.profile.open()">
-        <i>perm_identity</i>
-      </button-->
     </div>
-
-    <q-drawer swipe-only left-side ref="menu" v-show="authenticated">
+    
+    <!-- system settings menu admin only -->
+    <q-drawer swipe-only left-side ref="menu" >
       <div class="toolbar light">
         <i>menu</i>
         <q-toolbar-title :padding="1">
@@ -69,16 +52,13 @@
     <!-- sub-routes -->
     <router-view class="layout-view" :user="user"></router-view>
     
-    <!--q-drawer swipe-only right-side ref="profile">
-      <q-drawer-link icon="exit_to_app" to="/">Log out</q-drawer-link>
-    </q-drawer-->
-
   </q-layout>
 </template>
 
 <script>
 import { Toast } from 'quasar'
 import api from 'src/api'
+import users from 'src/users'
 
 export default {
   data () {
@@ -88,21 +68,21 @@ export default {
   },
   computed: {
     authenticated () {
-      return this.$data.user !== null
+      return users.authenticated()
+    },
+    admin () {
+      return users.admin()
+    },
+    admin_mode () {
+      return this.$data.adminMode
     }
   },
   methods: {
     goTo (route) {
       this.$router.push({ name: route })
     },
-    signout () {
-      api.logout()
-      .then(() => {
-        Toast.create.positive('You are now logged out, sign in again to continue to work')
-      })
-      .catch(_ => {
-        Toast.create.negative('Cannot logout, please check again in a few minutes')
-      })
+    admin_mode_off () {
+      this.$data.adminMode = false
     },
     getUser (accessToken) {
       return api.passport.verifyJWT(accessToken)

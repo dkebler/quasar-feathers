@@ -2,12 +2,11 @@
      <div class="layout-padding">
       <div class="column items-center">
         <div v-if="authenticated">
-          <div v-if="admin_user">
-             <button>
-             <i>featured_play_list</i>
-             <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 0]">Admin User</q-tooltip>
-             Admin
-             </button>
+          <div v-if="admin">
+               <p> admin user </p>
+            <div v-if="admin_mode">
+               <p> in admin mode </p>
+            </div>
             </div>
           <div v-else >
           <p> authenticated user </p>
@@ -21,6 +20,7 @@
 </template>
 
 <script>
+import users from 'src/users'
 
 export default {
   props: ['user'],
@@ -29,10 +29,16 @@ export default {
     }
   },
   computed: {
-    authenticated () {  // return this.user !== null
-      return true
+    authenticated () {
+      return users.authenticated()
     },
-    admin_user () { return false }
+    admin () {
+      return users.admin()
+    },
+    admin_mode () {
+      return users.admin_mode()
+    }
+
   },
   methods: {
   },

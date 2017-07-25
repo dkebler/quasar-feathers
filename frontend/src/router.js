@@ -23,12 +23,18 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
+      name: 'index',
       component: load('Index'),
       children: [
         {
           path: '/home',
           name: 'home',
           component: load('Home')
+        },
+        {
+          path: '/admin',
+          name: 'admin',
+          component: load('Admin')
         },
         {
           path: '/signin',
