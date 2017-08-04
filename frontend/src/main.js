@@ -8,17 +8,27 @@ require(`quasar/dist/quasar.${__THEME}.css`)
 
 import Vue from 'vue'
 import Quasar from 'quasar'
+Vue.use(Quasar) // Install Quasar Framework
+
+import { sync } from 'vuex-router-sync'
+
 import router from './router'
+import store from './store'
+
+sync(store, router) // done.
+
+store.commit('increment')
+console.log(store.state.count) // -> 1
 
 // Required IE 11 polyfill
-import 'babel-polyfill'
-
-Vue.use(Quasar) // Install Quasar Framework
-Vue.use(router)
+// import 'babel-polyfill'
 
 Quasar.start(() => {
   /* eslint-disable no-new */
   new Vue({
+    data: {
+      appName: '645 Lighting'
+    },
     router,
     el: '#q-app',
     render: h => h(require('./App'))

@@ -1,10 +1,11 @@
 <template>
      <div class="layout-padding">
-      <div class="column items-center">
-        <div v-if="authenticated">
-          <div v-if="admin">
+      <div class="column items-center"> 
+      <h1>Home Page</h1> 
+        <div v-if="isAuthenticated">
+          <div v-if="isAdmin">
                <p> admin user </p>
-            <div v-if="admin_mode">
+            <div v-if="isAdminMode">
                <p> in admin mode </p>
             </div>
             </div>
@@ -20,25 +21,17 @@
 </template>
 
 <script>
-import users from 'src/users'
+import user from 'src/users'
 
 export default {
-  props: ['user'],
   data () {
     return {
     }
   },
   computed: {
-    authenticated () {
-      return users.authenticated()
-    },
-    admin () {
-      return users.admin()
-    },
-    admin_mode () {
-      return users.admin_mode()
-    }
-
+    isAuthenticated: user.authenticated,
+    isAdmin: user.admin,
+    isAdminMode: user.adminMode
   },
   methods: {
   },
